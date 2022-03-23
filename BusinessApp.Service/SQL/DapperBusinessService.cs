@@ -1,0 +1,121 @@
+﻿using BusinessApp.Service.Models;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace BusinessApp.Service.SQL
+{
+    public class DapperBusinessService : IBusinessService
+    {
+        // BusinessOwner
+        // bizniz
+        private readonly string _connectionString;
+
+        public DapperBusinessService(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        public int ArchiveCustomer(Customer customer)
+        {
+            return this.ArchiveCustomer(customer.Id);
+        }
+
+        public int ArchiveCustomer(int customerId)
+        {
+            string sql = @"  UPDATE dbo.Customer SET
+                                Archived = 1
+                            WHERE Id = @Id";
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            return conn.Execute(sql, new { Id = customerId });
+        }
+
+        public int CreateCustomer(Customer customer)
+        {
+            string sql = @"  INSERT INTO dbo.Customer
+                              (
+	                               FirstName
+                                  ,LastName
+                                  ,City
+                                  ,State
+                                  ,Zip
+                                  ,Street
+                                  ,Suite
+                              )
+                              VALUES
+                              (
+	                               @FirstName
+                                  ,@LastName
+                                  ,@City
+                                  ,@State
+                                  ,@Zip
+                                  ,@Street
+                                  ,@Suite
+                              )";
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            return conn.Execute(sql, customer);
+        }
+
+        public int DeleteCustomer(Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int DeleteCustomer(int customerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Customer GetCustomer(Customer customer)
+        {
+            return this.GetCustomer(customer.Id);
+        }
+
+        public Customer GetCustomer(int customerId)
+        {
+            string sql = @"  SELECT Id
+	                              ,FirstName
+                                  ,LastName
+                                  ,City
+                                  ,State
+                                  ,Zip
+                                  ,Street
+                                  ,Suite
+                              FROM dbo.Customer
+                              WHERE Id = @Id
+                            ";
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            return conn.Query<Customer>(sql, new { Id = customerId }).FirstOrDefault();
+        }
+
+        public IEnumerable<Customer> GetCustomers()
+        {
+            string sql = @"  SELECT Id
+	                              ,FirstName
+                                  ,LastName
+                                  ,City
+                                  ,State
+                                  ,Zip
+                                  ,Street
+                                  ,Suite
+                              FROM dbo.Customer
+                              WHERE Archived <> 1
+                            ";
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            return conn.Query<Customer>(sql);
+        }
+
+        public int UpdateCustomer(Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
