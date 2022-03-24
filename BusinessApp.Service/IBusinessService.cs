@@ -13,7 +13,7 @@ namespace BusinessApp.Service
         int ArchiveCustomer(int customerId);
         int DeleteCustomer(Customer customer);
         int DeleteCustomer(int customerId);
-        IEnumerable<Customer> GetCustomers();
+        IEnumerable<Customer> GetCustomers(Customer filter, bool matchAny = false, bool matchExact = false);
         Customer GetCustomer(Customer customer);
         Customer GetCustomer(int customerId);
     }

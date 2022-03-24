@@ -1,4 +1,5 @@
-﻿using BusinessApp.Service.Models;
+﻿using BusinessApp.Service.Extensions;
+using BusinessApp.Service.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -95,7 +96,7 @@ namespace BusinessApp.Service.SQL
             return conn.Query<Customer>(sql, new { Id = customerId }).FirstOrDefault();
         }
 
-        public IEnumerable<Customer> GetCustomers()
+        public IEnumerable<Customer> GetCustomers(Customer filter, bool matchAny = false, bool matchExact = false)
         {
             string sql = @"  SELECT Id
 	                              ,FirstName
@@ -106,11 +107,34 @@ namespace BusinessApp.Service.SQL
                                   ,Street
                                   ,Suite
                               FROM dbo.Customer
-                              WHERE Archived <> 1
                             ";
 
+            List<string> conditions = new List<string>();
+
+            string gate = matchAny ? " OR " : " AND ";
+
+            if (filter.FirstName.HasValue())
+                conditions.Add(" FirstName = @FirstName ");
+            if (filter.LastName.HasValue())
+                conditions.Add(" LastName = @LastName ");
+            if (filter.City.HasValue())
+                conditions.Add(" City = @City ");
+            if (filter.State.HasValue())
+                conditions.Add(" State = @State ");
+            if (filter.Zip.HasValue)
+                conditions.Add(" Zip = @Zip ");
+            if (filter.Street.HasValue())
+                conditions.Add(" Street = @Street ");
+            if (filter.Suite.HasValue())
+                conditions.Add(" Suite = @Suite ");
+            if (filter.Archived.HasValue)
+                conditions.Add(" Archived = @Archived ");
+
+            if (conditions.Any())
+                sql += string.Join(gate, conditions.ToArray());
+
             using SqlConnection conn = new SqlConnection(_connectionString);
-            return conn.Query<Customer>(sql);
+            return conn.Query<Customer>(sql, filter);
         }
 
         public int UpdateCustomer(Customer customer)
