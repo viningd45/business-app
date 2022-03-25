@@ -8,24 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BusinessApp.Service.SQL
+namespace BusinessApp.Service.SQL.DapperBusinessService
 {
-    public class DapperBusinessService : IBusinessService
+    public partial class DapperBusinessService
     {
-        // BusinessOwner
-        // bizniz
-        private readonly string _connectionString;
-
-        public DapperBusinessService(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
-        public int ArchiveCustomer(Customer customer)
-        {
-            return this.ArchiveCustomer(customer.Id);
-        }
-
         public int ArchiveCustomer(int customerId)
         {
             string sql = @"  UPDATE dbo.Customer SET
@@ -63,20 +49,7 @@ namespace BusinessApp.Service.SQL
             return conn.Execute(sql, customer);
         }
 
-        public int DeleteCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
-        }
 
-        public int DeleteCustomer(int customerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Customer GetCustomer(Customer customer)
-        {
-            return this.GetCustomer(customer.Id);
-        }
 
         public Customer GetCustomer(int customerId)
         {
@@ -135,11 +108,6 @@ namespace BusinessApp.Service.SQL
 
             using SqlConnection conn = new SqlConnection(_connectionString);
             return conn.Query<Customer>(sql, filter);
-        }
-
-        public int UpdateCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
         }
     }
 }
