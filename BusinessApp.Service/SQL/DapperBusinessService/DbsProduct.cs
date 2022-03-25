@@ -7,7 +7,6 @@ namespace BusinessApp.Service.SQL.DapperBusinessService
 {
     public partial class DapperBusinessService
     {
-
         public int ArchiveProduct(Product product)
         {
             throw new NotImplementedException();

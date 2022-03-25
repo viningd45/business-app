@@ -33,12 +33,13 @@ namespace BusinessApp.Service
 
         #region CustomerOrder
         int CreateCustomerOrder(CustomerOrder order);
-        int GetCustomerOrder(int orderId);
+        CustomerOrder GetCustomerOrder(int orderId);
         IEnumerable<CustomerOrder> GetCustomerOrders(int customerId, DateTime? orderDate = null);
         #endregion
 
         #region OrderItem
         int CreateOrderItem(OrderItem item);
+        IEnumerable<OrderItem> GetOrderItems(int orderId);
         #endregion
 
 
