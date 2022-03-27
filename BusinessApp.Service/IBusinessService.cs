@@ -27,8 +27,7 @@ namespace BusinessApp.Service
         int CreatePrice(Price price);
         int CreatePrice(int productId, int price, DateTime? startDate = null);
         Price GetPrice(int productId, DateTime? requestDate = null);
-        Price GetPrice(int productId);
-        IEnumerable<Price> GetPriceHistory(DateTime from);
+        IEnumerable<Price> GetPriceHistory(int productId, DateTime from);
         #endregion
 
         #region CustomerOrder

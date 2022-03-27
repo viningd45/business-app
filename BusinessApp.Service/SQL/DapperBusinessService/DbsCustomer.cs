@@ -49,8 +49,6 @@ namespace BusinessApp.Service.SQL.DapperBusinessService
             return conn.Execute(sql, customer);
         }
 
-
-
         public Customer GetCustomer(int customerId)
         {
             string sql = @"  SELECT Id

@@ -46,6 +46,25 @@ namespace BusinessApp.Service.SQL.DapperBusinessService
             order.Items = this.GetOrderItems(orderId);
             return order;
         }
-        public IEnumerable<CustomerOrder> GetCustomerOrders(int customerId, DateTime? orderDate = null) => null;
+        public IEnumerable<CustomerOrder> GetCustomerOrders(int customerId, DateTime? orderDate = null)
+        {
+            string sql = @"  SELECT co.Id,
+                                    co.CustomerId,
+                                    co.OrderDate,
+                                    co.PaymentReceived 
+                            FROM dbo.CustomerOrder co
+                            WHERE co.CustomerId = @CustomerId     
+                            AND co.OrderDate > @OrderDate
+                        ";
+
+            var filter = new
+            { 
+                CustomerId = customerId, 
+                OrderDate = orderDate ?? DateTime.MinValue 
+            };
+
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            return conn.Query<CustomerOrder>(sql, filter);
+        }
     }
 }

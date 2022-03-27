@@ -1,4 +1,6 @@
 ﻿using BusinessApp.Service.Models;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,9 +9,14 @@ namespace BusinessApp.Service.SQL.DapperBusinessService
 {
     public partial class DapperBusinessService
     {
-        public int ArchiveProduct(Product product)
+        public int ArchiveProduct(int productId)
         {
-            throw new NotImplementedException();
+                string sql = @" UPDATE dbo.Product
+	                                SET Archived = 1
+                                WHERE Id = @ProductId";
+
+                using SqlConnection conn = new SqlConnection(_connectionString);
+                return conn.Execute(sql, new { ProductId = productId });
         }
 
         public int CreateProduct(Product product)
